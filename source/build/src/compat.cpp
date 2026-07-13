@@ -129,9 +129,13 @@ char *Bgethomedir(void)
     char const *e;
     if ((e = getenv("HOME")) == NULL || e[0] == '\0')
     {
+#ifdef __EMSCRIPTEN__
+        return Xstrdup("/home/web_user");
+#else
         auto const pw = getpwuid(getuid());
         if (pw == NULL || (e = pw->pw_dir) == NULL || e[0] == '\0')
             return NULL;
+#endif
     }
     return Xstrdup(e);
 #endif

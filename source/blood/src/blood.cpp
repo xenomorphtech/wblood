@@ -72,6 +72,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "nnexts.h"
 #endif
 
+#ifdef __EMSCRIPTEN__
+int wasmSmokeMain(void);
+#endif
+
 #ifdef _WIN32
 # include <shellapi.h>
 # define UPDATEINTERVAL 604800 // 1w
@@ -1603,6 +1607,12 @@ static int32_t check_filename_casing(void)
 
 int app_main(int argc, char const * const * argv)
 {
+#ifdef __EMSCRIPTEN__
+    for (int i = 1; i < argc; ++i)
+        if (!Bstrcmp(argv[i], "--wasm-smoke-test"))
+            return wasmSmokeMain();
+#endif
+
     char buffer[BMAX_PATH];
     margc = argc;
     margv = argv;

@@ -1,6 +1,16 @@
 
 obj/
 
+# Local WebAssembly toolchain and generated browser artifacts
+.tools/
+.codebase-memory/
+/nblood.data
+/nblood.html
+/nblood.js
+/nblood.wasm
+/platform/wasm/dist/
+/platform/wasm/node_modules/
+
 /eduke32
 /mapster32
 /voidsw

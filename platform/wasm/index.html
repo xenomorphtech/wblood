@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>NBlood WebAssembly</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #120809; color: #f5e7e7; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { width: min(92vw, 900px); text-align: center; }
+    h1 { letter-spacing: .08em; margin-bottom: .35rem; }
+    p { color: #cdbbbb; }
+    canvas { width: 100%; aspect-ratio: 8 / 5; background: #000; border: 1px solid #6d2929; box-shadow: 0 20px 70px #000b; image-rendering: pixelated; }
+    #status { font-family: ui-monospace, monospace; color: #ffb0a6; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>NBLOOD · WASM</h1>
+    <p id="status">Loading WebAssembly…</p>
+    <canvas id="canvas" width="640" height="400" tabindex="0"></canvas>
+    <p>Click the canvas, then use ←/→ and Space. Add <code>?game=1</code> to run with preloaded Blood data.</p>
+  </main>
+  <script>
+    const canvas = document.getElementById('canvas');
+    canvas.addEventListener('click', () => canvas.focus());
+    var Module = {
+      noInitialRun: true,
+      canvas,
+      print: text => console.log(text),
+      printErr: text => console.error(text),
+      onRuntimeInitialized() {
+        const gameMode = new URLSearchParams(location.search).has('game');
+        document.getElementById('status').textContent = gameMode ? 'Starting NBlood…' : 'Starting platform probe…';
+        canvas.focus();
+        Module.callMain(gameMode ? [] : ['--wasm-smoke-test']);
+      }
+    };
+  </script>
+  <script src="nblood.js"></script>
+</body>
+</html>

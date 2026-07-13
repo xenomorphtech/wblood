@@ -30,6 +30,10 @@
 #include "softsurface.h"
 #include "vfs.h"
 
+#ifdef __EMSCRIPTEN__
+# include <emscripten.h>
+#endif
+
 #ifdef USE_OPENGL
 # include "glad/glad.h"
 # include "glsurface.h"
@@ -12160,6 +12164,12 @@ void videoNextPage(void)
 
     beforedrawrooms = 1;
     numframes++;
+
+#ifdef __EMSCRIPTEN__
+    // A browser must regain control between frames to paint the canvas and
+    // dispatch DOM events. ASYNCIFY turns this sleep into a cooperative yield.
+    emscripten_sleep(0);
+#endif
 }
 
 uint8_t voxpal[768];
