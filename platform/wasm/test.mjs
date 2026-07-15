@@ -33,7 +33,7 @@ try {
   });
   page.on('requestfailed', request => errors.push(`${request.url()}: ${request.failure()?.errorText}`));
 
-  await page.goto('http://127.0.0.1:8123/', { waitUntil: 'load' });
+  await page.goto('http://127.0.0.1:8123/?smoke=1', { waitUntil: 'load' });
   await page.waitForFunction(() => document.documentElement.dataset.wasmReady === 'true', null, { timeout: 30000 });
   const before = await page.evaluate(() => ({ ...Module.wasmSmokeState }));
   await page.evaluate(() => scrollTo(0, 0));

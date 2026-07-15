@@ -1,9 +1,10 @@
 # NBlood WebAssembly
 
-Run `platform/wasm/build.sh`, then serve `platform/wasm/dist` over HTTP. The
-default page runs a self-contained video/input probe compiled into the complete
-NBlood binary. To run the game, copy legally obtained Blood data files into
-`platform/wasm/assets`, rebuild, and open `index.html?game=1`.
+Run `platform/wasm/build.sh`, then serve `platform/wasm/dist` over HTTP. Copy
+legally obtained Blood data files into `platform/wasm/assets` before building;
+the default page launches NBlood with those preloaded files. Open
+`index.html?smoke=1` to run the self-contained video/input probe compiled into
+the complete NBlood binary.
 
 The browser target currently uses the classic software renderer. Networking,
 desktop startup UI, external codecs, and persistent config storage are disabled.

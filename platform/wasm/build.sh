@@ -42,9 +42,12 @@ make -j"${JOBS:-4}" blood "${common[@]}" "blood_game_ldflags=${link_flags[*]}"
 
 mkdir -p platform/wasm/dist
 cp nblood.js nblood.wasm platform/wasm/dist/
+asset_files=(nblood.js nblood.wasm)
 if [[ -f nblood.data ]]; then
     cp nblood.data platform/wasm/dist/
+    asset_files+=(nblood.data)
 fi
-cp platform/wasm/index.html platform/wasm/dist/index.html
+asset_version="$(sha256sum "${asset_files[@]}" | sha256sum | cut -c1-12)"
+sed "s/__ASSET_VERSION__/$asset_version/g" platform/wasm/index.html > platform/wasm/dist/index.html
 
-echo "Built platform/wasm/dist/index.html"
+echo "Built platform/wasm/dist/index.html (assets $asset_version)"

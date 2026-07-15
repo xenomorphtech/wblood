@@ -20,24 +20,37 @@
     <h1>NBLOOD · WASM</h1>
     <p id="status">Loading WebAssembly…</p>
     <canvas id="canvas" width="640" height="400" tabindex="0"></canvas>
-    <p>Click the canvas, then use ←/→ and Space. Add <code>?game=1</code> to run with preloaded Blood data.</p>
+    <p>Click the canvas to focus the game. Add <code>?smoke=1</code> to run the platform diagnostic.</p>
   </main>
   <script>
     const canvas = document.getElementById('canvas');
+    const status = document.getElementById('status');
+    const assetVersion = '__ASSET_VERSION__';
     canvas.addEventListener('click', () => canvas.focus());
     var Module = {
       noInitialRun: true,
       canvas,
+      locateFile: path => `${path}?v=${assetVersion}`,
       print: text => console.log(text),
       printErr: text => console.error(text),
+      setStatus(text) {
+        const download = text.match(/Downloading data\.\.\. \((\d+)\/(\d+)\)/);
+        if (download) {
+          const loaded = (Number(download[1]) / 1048576).toFixed(1);
+          const total = (Number(download[2]) / 1048576).toFixed(1);
+          status.textContent = `Downloading Blood data — ${loaded} / ${total} MB. Please wait; do not refresh.`;
+        } else if (text === 'Downloading data...') {
+          status.textContent = 'Downloading Blood data (about 65 MB). Please wait; do not refresh.';
+        }
+      },
       onRuntimeInitialized() {
-        const gameMode = new URLSearchParams(location.search).has('game');
-        document.getElementById('status').textContent = gameMode ? 'Starting NBlood…' : 'Starting platform probe…';
+        const smokeMode = new URLSearchParams(location.search).has('smoke');
+        status.textContent = smokeMode ? 'Starting platform probe…' : 'Starting NBlood…';
         canvas.focus();
-        Module.callMain(gameMode ? [] : ['--wasm-smoke-test']);
+        Module.callMain(smokeMode ? ['--wasm-smoke-test'] : []);
       }
     };
   </script>
-  <script src="nblood.js"></script>
+  <script src="nblood.js?v=__ASSET_VERSION__"></script>
 </body>
 </html>
