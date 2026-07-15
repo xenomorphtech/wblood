@@ -15,4 +15,9 @@ For the automated browser test:
 cd platform/wasm
 npm install
 npm test
+npm run test:game
 ```
+
+`test:game` requires the Blood data files in `platform/wasm/assets`. It drives
+Chrome through the main, episode, and difficulty menus into a running level and
+writes the captured stages to `platform/wasm/artifacts/chrome-game-flow`.

@@ -2,7 +2,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node test.mjs"
+    "test": "node test.mjs",
+    "test:game": "node game-test.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.53.0"

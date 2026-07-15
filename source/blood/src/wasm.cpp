@@ -1,10 +1,17 @@
 #ifdef __EMSCRIPTEN__
 
+#include "baselayer.h"
 #include "sdl_inc.h"
 
 #include <emscripten.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+extern "C" EMSCRIPTEN_KEEPALIVE void wasmInjectKey(int scanCode, int pressed)
+{
+    if ((unsigned)scanCode < NUMKEYS)
+        keySetState(scanCode, pressed != 0);
+}
 
 int wasmSmokeMain(void)
 {

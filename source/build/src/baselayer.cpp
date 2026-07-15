@@ -9,6 +9,10 @@
 #include "polymost.h"
 #include "renderlayer.h"
 
+#ifdef __EMSCRIPTEN__
+# include <emscripten.h>
+#endif
+
 #define MINICORO_IMPL
 #define MCO_LOG initprintf
 #define MCO_ASSERT Bassert
@@ -906,6 +910,12 @@ int engineFPSLimit(bool const throttle)
 
         return true;
     }
+
+#ifdef __EMSCRIPTEN__
+    // When a frame is not ready, native builds can spin until the timer advances.
+    // A browser must yield here so input, timers, and painting can make progress.
+    emscripten_sleep(0);
+#endif
 
     return false;
 }
